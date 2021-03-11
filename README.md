@@ -103,7 +103,7 @@ for details.
         <configFile>appmap.yml</configFile>
         <outputDirectory>target/appmap</outputDirectory>
         <skip>false</skip>
-        <debug />
+        <debug>true</debug>
         <eventValueSize>1024</eventValueSize>
     </configuration>
     <executions>
