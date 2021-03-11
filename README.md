@@ -79,7 +79,7 @@ for details.
 
 ## Plugin goals
 
-- `prepare-agent` : adds `appmap.jar` to JVM execution as a Java agent
+- `prepare-agent` - adds the AppMap Java agent to the JVM
 
 ## Plugin configuration
 
