@@ -58,19 +58,14 @@ for details.
 ### Typical entry in pom.xml
 
 ```xml
-<!-- this goes to the properties section -->
-<appmap.version>0.5.3</appmap.version>
-
-<!-- -snip- -->
-
-<!-- the plugin element goes to plugins -->
+<!-- the plugin element goes to build/plugins -->
 <!-- AppMap agent, default parameters -->
 <plugin>
     <groupId>com.appland</groupId>
     <artifactId>appmap-maven-plugin</artifactId>
-    <version>${appmap.version}</version>
     <executions>
         <execution>
+            <phase>process-test-classes</phase>
             <goals>
                 <goal>prepare-agent</goal>
             </goals>
@@ -100,7 +95,6 @@ for details.
 <plugin>
     <groupId>com.appland</groupId>
     <artifactId>appmap-maven-plugin</artifactId>
-    <version>${appmap.version}</version>
     <configuration>
         <configFile>appmap.yml</configFile>
         <outputDirectory>target/appmap</outputDirectory>
@@ -110,6 +104,7 @@ for details.
     </configuration>
     <executions>
         <execution>
+            <phase>process-test-classes</phase>
             <goals>
                 <goal>prepare-agent</goal>
             </goals>
