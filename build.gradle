@@ -35,7 +35,7 @@ def paramGitSlug        = System.getenv("TRAVIS_REPO_SLUG")     ?: defGitSlug
 def paramMavenRepo      = findProperty('mavenRepo')             ?: defMavenRepo
 
 def paramVersion        = findProperty('paramVersion')
-def travisVersion       = System.getenv("TRAVIS_BRANCH") 
+def travisVersion       = System.getenv("TRAVIS_BRANCH")
 def versionLikeRegexp   = /^\d+\.\d+.*/
 def travisVersionOK     = travisVersion && (travisVersion ==~ versionLikeRegexp)
 paramVersion = paramVersion ?: ( travisVersionOK ? travisVersion : defVersion )
@@ -54,19 +54,19 @@ dependencies {
     compileOnly 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.6.0'
     implementation 'org.apache.maven:maven-core:3.5.4'
     implementation 'org.apache.commons:commons-lang3:3.10'
-    
+
     testImplementation 'junit:junit:4.13.1'
 
     // as per https://stackoverflow.com/a/64726155
-	mavenEmbedder 'org.apache.maven:maven-embedder:3.6.3'
-	mavenEmbedder 'org.apache.maven:maven-compat:3.6.3'	
+    mavenEmbedder 'org.apache.maven:maven-embedder:3.6.3'
+    mavenEmbedder 'org.apache.maven:maven-compat:3.6.3'
     mavenEmbedder 'org.apache.maven.resolver:maven-resolver-connector-basic:1.4.1'
     mavenEmbedder 'org.apache.maven.resolver:maven-resolver-transport-http:1.4.1'
     mavenEmbedder 'org.slf4j:slf4j-simple:1.7.30'
 //    mavenEmbedder 'org.apache.maven.wagon:wagon-http:3.4.1'
-//    mavenEmbedder 'org.apache.maven.wagon:wagon-provider-api:3.4.1'    
+//    mavenEmbedder 'org.apache.maven.wagon:wagon-provider-api:3.4.1'
 
-    implementation 'com.appland:appmap-agent:0.5.0'
+    implementation 'com.appland:appmap-agent:1.0.1'
 }
 
 //group         = paramGroupId
@@ -80,8 +80,8 @@ compileJava.options.encoding = 'UTF-8'
 
 install.repositories.mavenInstaller.pom.with {
     groupId     = paramGroupId
-    artifactId  = paramArtifactId 
-    version     = paramVersion 
+    artifactId  = paramArtifactId
+    version     = paramVersion
     packaging   = 'maven-plugin'
     name        = paramName
     description = paramDescription
@@ -147,10 +147,10 @@ project.jar.dependsOn(generatePluginDescriptor)
 
 
 // demand generation of extra artifacts
-apply plugin: 'java' 
+apply plugin: 'java'
 java {
-    withSourcesJar() 
-    withJavadocJar()  
+    withSourcesJar()
+    withJavadocJar()
 }
 
 
@@ -158,32 +158,29 @@ java {
 apply plugin: 'maven-publish'
 publishing {
   publications {
-            
         appMapPlugin(MavenPublication) {
 
             // requirements: https://central.sonatype.org/pages/requirements.html
 
-            // 1. coordinates  
+            // 1. coordinates
             groupId     paramGroupId
-            artifactId  paramArtifactId 
+            artifactId  paramArtifactId
             version     paramVersion
 
- 
-            // 2. artifacts 
+
+            // 2. artifacts
             from components.java
             //// the artifacts below added automatically by `java { with... }` block above
             // artifact sourcesJar
             // artifact javadocJar
 
-   
-            // metadata 
+            // metadata
             // TBD: parameterize more values?
 
             pom {
-                name        = paramName     //   "$paramGroupId:$paramArtifactId"     
+                name        = paramName     // "$paramGroupId:$paramArtifactId"
                 description = paramDescription
-                url         = "https://appland.com"     
-            
+                url         = "https://appland.com"
                 licenses {
                   license {
                     name = "MIT"
@@ -204,42 +201,35 @@ publishing {
                     developerConnection = "scm:git:ssh://github.com:${paramGitSlug}.git"
                     url = "https://github.com/${paramGitSlug}/tree/master"
                 }
-            }          
- 
+            }
         }
   }
- 
-   repositories {
 
+   repositories {
         def local_url       = "file://${buildDir}/repo"
         def staging_url     = paramMavenRepo + "/service/local/staging/deploy/maven2/"
         def snapshots_url   = paramMavenRepo + "/content/repositories/snapshots/"
-        
         def is_snapshot     = paramVersion.endsWith('SNAPSHOT')
-        def remote_url      = is_snapshot  ? snapshots_url : staging_url 
-        
-        
+        def remote_url      = is_snapshot  ? snapshots_url : staging_url
+
         maven {
             if (paramRepoUsername) {
-                url = remote_url 
+                url = remote_url
                 credentials {
-                    username = paramRepoUsername 
+                    username = paramRepoUsername
                     password = paramRepoPassword
                 }
             } else {
                 url = local_url
             }
         }
-
-            
     }
-   
 }
 
 
 // conditionally inject sign tasks into the flow
 if (paramSignKey) {
-    apply plugin: 'signing' 
+    apply plugin: 'signing'
     signing {
         useInMemoryPgpKeys(paramSignKey, paramSignPassword)
         sign publishing.publications.appMapPlugin
