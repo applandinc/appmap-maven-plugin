@@ -77,23 +77,19 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
      * Generate required quotes JVM argument based on current configuration and
      * prepends it to the given argument command line. If a agent with the same
      * JAR file is already specified this parameter is removed from the existing
-     * command line, does the same for xbootclasspath command.
+     * command line.
      */
     private void removeOldAppMapAgentFromCommandLine(List<String> oldArgs) {
         final String plainAgent = format("-javaagent:%s", getAppMapAgentJar());
-        final String xbootClasspath =   format("-Xbootclasspath/a:%s", getAppMapAgentJar());
         for (final Iterator<String> i = oldArgs.iterator(); i.hasNext(); ) {
             final String oldCommand = i.next();
-            if (oldCommand.startsWith(plainAgent) || oldCommand.startsWith(xbootClasspath)) {
+            if (oldCommand.startsWith(plainAgent)) {
                 i.remove();
             }
         }
     }
 
     private void addMvnAppMapCommandLineArgsFirst(List<String> args) {
-        args.add(StringEscapeUtils.escapeJava(
-                format("-Xbootclasspath/a:%s", getAppMapAgentJar(), this)
-        ));
         args.add(StringEscapeUtils.escapeJava(
                 format("-javaagent:%s=%s", getAppMapAgentJar(), this)
         ));
