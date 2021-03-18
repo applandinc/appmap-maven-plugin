@@ -82,9 +82,10 @@ for details.
 
 - `configFile` Path to the `appmap.yml` config file. Default: _./appmap.yml_
 - `outputDirectory` Output directory for `.appmap.json` files. Default:
-  _./tmp/appmap_
+  _./target/appmap_
 - `skip` Agent won't record tests when set to true. Default: _false_
-- `debug` Enable debug logging. Default: _null_
+- `debug` Enable debug logging. Default: _false_
+- `debugFile` Specify where to output debug logs. Default: _target/appmap/agent.log_
 - `eventValueSize` Specifies the length of a value string before truncation
   occurs. If set to 0, truncation is disabled. Default: _1024_
 
@@ -99,7 +100,8 @@ for details.
         <configFile>appmap.yml</configFile>
         <outputDirectory>target/appmap</outputDirectory>
         <skip>false</skip>
-        <debug>true</debug>
+        <debug>false</debug>
+        <debugFile>target/appmap/agent.log</debugFile>
         <eventValueSize>1024</eventValueSize>
     </configuration>
     <executions>

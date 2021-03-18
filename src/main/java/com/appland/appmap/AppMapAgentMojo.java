@@ -21,13 +21,16 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
     protected boolean skip = false;
 
     @Parameter(property = "project.outputDirectory")
-    protected File outputDirectory = new File("tmp");
+    protected File outputDirectory = new File("target/appmap");
 
     @Parameter(property = "project.configFile")
     protected File configFile = new File("appmap.yml");
 
     @Parameter(property = "project.debug")
-    protected String debug = "disabled";
+    protected Boolean debug = false;
+
+    @Parameter(property = "project.debugFile")
+    protected File debugFile = new File("target/appmap/agent.log");
 
     @Parameter(property = "project.eventValueSize")
     protected Integer eventValueSize = 1024;
@@ -94,7 +97,11 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
                 format("-javaagent:%s=%s", getAppMapAgentJar(), this)
         ));
 
-        args.add(0, "-Dappmap.debug=" + StringEscapeUtils.escapeJava(debug));
+        if (this.debug) {
+            args.add(0, "-Dappmap.debug");
+            args.add(0, "-Dappmap.debug.file=" + StringEscapeUtils.escapeJava(format("%s", debugFile)));
+        }
+
         args.add(0, "-Dappmap.output.directory=" + StringEscapeUtils.escapeJava(format("%s", outputDirectory)));
         args.add(0, "-Dappmap.config.file=" + StringEscapeUtils.escapeJava(format("%s", configFile)));
         args.add(0, "-Dappmap.event.valueSize=" + eventValueSize);
