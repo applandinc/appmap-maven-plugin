@@ -27,7 +27,7 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
     protected File configFile = new File("appmap.yml");
 
     @Parameter(property = "project.debug")
-    protected String debug = "disabled";
+    protected String debug = null;
 
     @Parameter(property = "project.eventValueSize")
     protected Integer eventValueSize = 1024;
@@ -99,7 +99,6 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
         args.add(0, "-Dappmap.config.file=" + StringEscapeUtils.escapeJava(format("%s", configFile)));
         args.add(0, "-Dappmap.event.valueSize=" + eventValueSize);
     }
-
 
     private Object setProjectArgLineProperty(String newValue) {
         return project.getProperties().setProperty(SUREFIRE_ARG_LINE, newValue);

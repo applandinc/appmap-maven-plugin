@@ -1,14 +1,13 @@
 package com.appland.appmap;
 
-import static org.junit.Assert.assertEquals;
-
 import com.appland.appmap.output.v1.Event;
-
 import com.appland.appmap.record.IRecordingSession;
 import com.appland.appmap.record.Recorder;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class LoadJavaMapAgentMojoTest {
 
