@@ -17,24 +17,28 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
     static final String APPMAP_AGENT_ARTIFACT_NAME = "com.appland:appmap-agent";
     static final String SUREFIRE_ARG_LINE = "argLine";
     static final List<String> DEBUG_FLAGS = Arrays.asList("hooks", "locals", "http");
+    public static final String DEFAULT_CONFIG_FILE = "appmap.yml";
+    public static final String DEFAULT_OUTPUT_DIRECTORY = "target/appmap";
+    public static final String DEFAULT_DEBUG_FILE = "target/appmap/agent.log";
+    public static final int DEFAULT_EVENT_VALUE_SIZE = 1024;
 
     @Parameter(property = "skip")
     protected boolean skip = false;
 
     @Parameter(property = "project.outputDirectory")
-    protected File outputDirectory = new File("target/appmap");
+    protected File outputDirectory = new File(DEFAULT_OUTPUT_DIRECTORY);
 
     @Parameter(property = "project.configFile")
-    protected File configFile = new File("appmap.yml");
+    protected File configFile = new File(DEFAULT_CONFIG_FILE);
 
     @Parameter(property = "project.debug")
     protected String debug = "info";
 
     @Parameter(property = "project.debugFile")
-    protected File debugFile = new File("target/appmap/agent.log");
+    protected File debugFile = new File(DEFAULT_DEBUG_FILE);
 
     @Parameter(property = "project.eventValueSize")
-    protected Integer eventValueSize = 1024;
+    protected Integer eventValueSize = DEFAULT_EVENT_VALUE_SIZE;
 
     @Parameter(property = "plugin.artifactMap")
     protected Map<String, Artifact> pluginArtifactMap;
@@ -44,7 +48,9 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
 
     public abstract void execute() throws MojoExecutionException;
 
-    protected void skipMojo() {
+    protected void skipMojo(String reason) {
+        skip = true;
+        getLog().info(reason);
     }
 
     protected void loadAppMapJavaAgent() {
