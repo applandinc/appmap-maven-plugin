@@ -5,6 +5,8 @@
   - [About](#about)
   - [Plugin goals](#plugin-goals)
   - [Plugin configuration](#plugin-configuration)
+  - [Notes](#notes)
+    - [Configuring Surefire](#configuring-surefire) 
   - [Troubleshooting](#troubleshooting)
   - [Running without modifying `pom.xml`](#running-without-modifying-pomxml)
 
@@ -61,29 +63,6 @@ That's all! The AppMap agent will automatically record your tests when you run
 Using Visual Studio Code? [Download the AppMap extension](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
 to view AppMap files in your IDE.
 
-### Surefire advanced configuration
-Some configuration parameters of the Surefire plugin may prevent the appmap plugin
-from being activated when the tests are run:
-1. `forkCount` may not be set to `0`. Please set it to a value larger than `0` or
-remove this configuration parameter from `pom.xml`
-3. If `argLine` is specified, it must include `@{argLine}`
-
-Example:
-```xml
-<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <version>${maven-surefire-plugin.version}</version>
-    <configuration>
-        <forkCount>1</forkCount>
-        <reuseForks>true</reuseForks>
-        <argLine>
-            @{argLine} --illegal-access=permit
-        </argLine>
-    </configuration>
-</plugin>
-```
-
 ## About
 
 The AppMap Maven Plugin provides simple method for recording AppMaps in running
@@ -108,14 +87,40 @@ for details.
   _target/appmap/agent.log_
 - `eventValueSize` Specifies the length of a value string before truncation
   occurs. If set to 0, truncation is disabled. Default: _1024_
+  
+## Notes
+### Configuring Surefire
+Some configuration parameters of the Surefire plugin may prevent the appmap plugin
+from being activated when the tests are run:
+1. `forkCount` may not be set to `0`. Please set it to a value larger than `0` or
+remove this configuration parameter from `pom.xml`
+3. If `argLine` is specified, it must include `@{argLine}`
+
+Example:
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>${maven-surefire-plugin.version}</version>
+    <configuration>
+        <forkCount>1</forkCount>
+        <reuseForks>true</reuseForks>
+        <argLine>
+            @{argLine} --illegal-access=permit
+        </argLine>
+    </configuration>
+</plugin>
+```
 
 ## Troubleshooting
 
 **I have no `target/appmap` directory**  
   It's likely that the agent is not running. Double check the `prepare-agent`
   goal is being run. If the JVM is being forked at any point, make sure the
-  `javaagent` argument is being propagated to the new process. Check that
-  the Surefire plugin configuration is not preventing the agent from running.
+  `javaagent` argument is being propagated to the new process. Additionally
+  check that the Surefire plugin configuration is not preventing the agent
+  from running. See ["Configuring Surefire"](#configuring-surefire) for more
+  information.
 
 **`*.appmap.json` files are present, but appear empty or contain little data**  
   Double check your `appmap.yml`. This usually indicates that the agent is
