@@ -15,7 +15,6 @@ import static java.lang.String.format;
 public abstract class AppMapAgentMojo extends AbstractMojo {
 
     static final String APPMAP_AGENT_ARTIFACT_NAME = "com.appland:appmap-agent";
-    static final String SUREFIRE_ARG_LINE = "argLine";
     static final List<String> DEBUG_FLAGS = Arrays.asList("hooks", "locals", "http");
 
     @Parameter(property = "skip")
@@ -29,6 +28,9 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
 
     @Parameter(property = "project.debug")
     protected String debug = "info";
+
+    @Parameter(property = "project.targetArgument")
+    protected String targetArgument = "argLine";
 
     @Parameter(property = "project.debugFile")
     protected File debugFile = new File("target/appmap/agent.log");
@@ -50,13 +52,13 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
     protected void loadAppMapJavaAgent() {
         final String newValue = buildArguments();
         setProjectArgLineProperty(newValue);
-        getLog().info(SUREFIRE_ARG_LINE
+        getLog().info(targetArgument
                 + " set to " + StringEscapeUtils.unescapeJava(newValue));
     }
 
     /**
      * This method builds the needed parameter to run the Agent, if previous configuration is found is also attached in
-     * the SUREFIRE_ARG_LINE, if previous version of the AppMap agent is found is removed and replaced with the version
+     * the targetArgument, if previous version of the AppMap agent is found is removed and replaced with the version
      * of this maven plugin
      *
      * @return formatted and escaped arguments to run on command line
@@ -117,11 +119,11 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
 
 
     private Object setProjectArgLineProperty(String newValue) {
-        return project.getProperties().setProperty(SUREFIRE_ARG_LINE, newValue);
+        return project.getProperties().setProperty(targetArgument, newValue);
     }
 
     private String getCurrentArgLinePropertyValue() {
-        return project.getProperties().getProperty(SUREFIRE_ARG_LINE);
+        return project.getProperties().getProperty(targetArgument);
     }
 
     protected File getAppMapAgentJar() {
