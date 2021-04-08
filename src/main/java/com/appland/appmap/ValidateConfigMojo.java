@@ -1,26 +1,18 @@
 package com.appland.appmap;
 
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.FileNotFoundException;
-import java.nio.file.Files;
 
-/**
- * Goal that adds appmap.jar to JVM execution as javaagent, right before the test execution begins.
- */
-@Mojo(name = "prepare-agent", defaultPhase = LifecyclePhase.TEST_COMPILE)
-public class LoadJavaAppMapAgentMojo extends AppMapAgentMojo {
+@Mojo(name = "validate-config", defaultPhase = LifecyclePhase.TEST_COMPILE)
+public class ValidateConfigMojo extends AppMapAgentMojo {
 
     @Override
     public void execute() throws MojoExecutionException {
         try {
-            if (skip) {
-                skipMojo("Skipping AppLand AppMap execution because property skip is set.");
-                return;
-            } else if (!isConfigFileValid()) {
+            if (!isConfigFileValid()) {
                 skipMojo(
                         "Skipping AppLand AppMap execution because the config file: "
                                 + configFile.getPath()
@@ -28,13 +20,11 @@ public class LoadJavaAppMapAgentMojo extends AppMapAgentMojo {
                 );
                 throw new FileNotFoundException(configFile.getPath());
             } else {
-                getLog().info("Initializing AppLand AppMap Java Recorder.");
-                loadAppMapJavaAgent();
+                getLog().info("Appland AppMap Configuration file found.");
             }
         } catch (Exception e) {
-            getLog().error("Error initializing AppLand AppMap Java Recorder");
+            getLog().error("Error executing AppLand AppMap Java Recorder");
             throw new MojoExecutionException("Error initializing AppLand AppMap Java Recorder", e);
         }
     }
-
 }

@@ -1,13 +1,8 @@
 package com.appland.appmap;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.DefaultArtifact;
-import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.plugin.Mojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.testing.MojoRule;
-import org.apache.maven.project.MavenProject;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -17,7 +12,6 @@ import java.io.FileNotFoundException;
 import static org.junit.Assert.*;
 
 public class PluginLoadTest {
-    static final String SUREFIRE_ARG_LINE = "argLine";
 
     @Rule
     public MojoRule rule = new MojoRule() {
@@ -43,8 +37,7 @@ public class PluginLoadTest {
     }
 
     @Test
-    public void testMojoIsLoaded()
-            throws Exception {
+    public void testMojoIsLoaded() throws Exception {
         LoadJavaAppMapAgentMojo mojo = (LoadJavaAppMapAgentMojo)
                 rule.configureMojo(
                         new LoadJavaAppMapAgentMojo(),

@@ -8,6 +8,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -136,5 +137,9 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
 
     public MavenProject getProject() {
         return project;
+    }
+
+    protected boolean isConfigFileValid() {
+        return configFile.exists() && Files.isReadable(configFile.toPath());
     }
 }
