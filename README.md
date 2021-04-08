@@ -74,6 +74,7 @@ for details.
 ## Plugin goals
 
 - `prepare-agent` - adds the AppMap Java agent to the JVM
+- `validate-config` - Validates the config file is present and redable
 
 ## Plugin configuration
 
@@ -113,6 +114,12 @@ Example:
 ```
 
 ## Troubleshooting
+
+**After I add the appmap plugin config in the POM my project won't build**
+  It's likely the configuration file is not present or is not redable, try
+  using the validate-config file goal of the maven plugin to check whether
+  you have a configuration problem or not, run:
+  `mvn com.appland:appmap-maven-plugin:validate-config`
 
 **I have no `target/appmap` directory**  
   It's likely that the agent is not running. Double check the `prepare-agent`
