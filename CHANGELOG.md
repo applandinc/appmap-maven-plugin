@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/applandinc/appmap-maven-plugin/compare/v1.1.1...v1.1.2) (2021-04-08)
+
+
+### Bug Fixes
+
+* Upgrade appmap-agent to 1.0.4 ([65b0b70](https://github.com/applandinc/appmap-maven-plugin/commit/65b0b708871fcb56009d8fa2d81ca2a28b90ecd2))
+
 ## [1.1.1](https://github.com/applandinc/appmap-maven-plugin/compare/v1.1.0...v1.1.1) (2021-03-23)
 
 
