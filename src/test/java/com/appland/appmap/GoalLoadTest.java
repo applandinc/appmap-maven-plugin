@@ -7,7 +7,6 @@ import java.io.File;
 
 public class GoalLoadTest extends AbstractMojoTestCase {
 
-
     @Test
     public void testPrepareAgentGoalIsLoadedCorrectly() throws Exception {
         File pluginPom = new File("target/test-classes/test-project2/pom.xml");
