@@ -31,7 +31,7 @@ public class PluginLoadTest {
         Mojo mojo = rule.configureMojo(
                 new LoadJavaAppMapAgentMojo(),
                 "appmap-maven-plugin",
-                new File("target/test-classes/test-project/pom.xml")
+                new File("build/resources/test/test-project/pom.xml")
         );
         assertNotNull(mojo);
     }
@@ -42,7 +42,7 @@ public class PluginLoadTest {
                 rule.configureMojo(
                         new LoadJavaAppMapAgentMojo(),
                         "appmap-maven-plugin",
-                        new File("target/test-classes/test-project/pom.xml")
+                        new File("build/resources/test/test-project/pom.xml")
                 );
         assertNotNull(mojo);
     }
@@ -53,12 +53,12 @@ public class PluginLoadTest {
                 rule.configureMojo(
                         new LoadJavaAppMapAgentMojo(),
                         "appmap-maven-plugin",
-                        new File("target/test-classes/test-project/pom.xml")
+                        new File("build/resources/test/test-project/pom.xml")
                 );
         assertNotNull(mojo);
         Exception exception = assertThrows(
                 MojoExecutionException.class,
-                () -> rule.executeMojo(new File("target/test-classes/test-project/"), "prepare-agent")
+                () -> rule.executeMojo(new File("build/resources/test/test-project/"), "prepare-agent")
         );
         assertTrue(exception.getCause() instanceof FileNotFoundException);
     }
@@ -69,12 +69,12 @@ public class PluginLoadTest {
                 rule.configureMojo(
                         new LoadJavaAppMapAgentMojo(),
                         "appmap-maven-plugin",
-                        new File("target/test-classes/test-project/nonexistent_config_file_pom.xml")
+                        new File("build/resources/test/test-project/nonexistent_config_file_pom.xml")
                 );
         assertNotNull(mojo);
         Exception exception = assertThrows(
                 MojoExecutionException.class,
-                () -> rule.executeMojo(new File("target/test-classes/test-project/"), "prepare-agent")
+                () -> rule.executeMojo(new File("build/resources/test/test-project/"), "prepare-agent")
         );
         assertTrue(exception.getCause() instanceof FileNotFoundException);
     }
