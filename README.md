@@ -60,8 +60,8 @@ Next, add the following plugin definition to your `pom.xml`:
 That's all! The AppMap agent will automatically record your tests when you run
 `mvn test`. By default, AppMap files are output to `target/appmap`.
 
-Using Visual Studio Code? [Download the AppMap extension](https://marketplace.visualstudio.com/items?itemName=appland.appmap)
-to view AppMap files in your IDE.
+Using IntelliJ IDEA or Visual Studio Code?
+[Open the Quickstart guide](https://appland.com/docs/quickstart) and install the AppMap extension to view AppMap files in your IDE.
 
 ## About
 
