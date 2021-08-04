@@ -9,6 +9,7 @@ plugins {
   id 'maven'
   id 'signing'
   id 'maven-publish'
+  id 'io.github.gradle-nexus.publish-plugin' version '1.0.0'
 }
 
 // parameterization
@@ -38,6 +39,9 @@ def versionLikeRegexp = /^\d+\.\d+.*/
 def travisVersionOK = travisVersion && (travisVersion ==~ versionLikeRegexp)
 paramVersion = paramVersion ?: (travisVersionOK ? travisVersion : defVersion)
 
+// required by NexusPublishing
+version = paramVersion
+group = paramGroupId
 
 repositories {
   mavenCentral()
@@ -162,7 +166,6 @@ publishing {
       artifactId paramArtifactId
       version paramVersion
 
-
       // 2. artifacts
       from components.java
       //// the artifacts below added automatically by `java { with... }` block above
@@ -199,28 +202,20 @@ publishing {
       }
     }
   }
-
-  repositories {
-    def local_url = "file://${buildDir}/repo"
-    def staging_url = paramMavenRepo + "/service/local/staging/deploy/maven2/"
-    def snapshots_url = paramMavenRepo + "/content/repositories/snapshots/"
-    def is_snapshot = paramVersion.endsWith('SNAPSHOT')
-    def remote_url = is_snapshot ? snapshots_url : staging_url
-
-    maven {
-      if (paramRepoUsername) {
-        url = remote_url
-        credentials {
-          username = paramRepoUsername
-          password = paramRepoPassword
-        }
-      } else {
-        url = local_url
-      }
-    }
-  }
 }
 
+nexusPublishing {
+  repositories {
+    sonatype {
+      nexusUrl = uri(paramMavenRepo + "/service/local/")
+      snapshotRepositoryUrl = uri(paramMavenRepo + "/content/repositories/snapshots")
+      username = paramRepoUsername
+      password = paramRepoPassword
+    }
+  } else {
+    url = local_url
+  }
+}
 
 // conditionally inject sign tasks into the flow
 if (paramSignKey) {

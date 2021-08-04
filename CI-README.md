@@ -40,11 +40,10 @@ bash expression on the stdout. The result could be sored in Travis UI.
 
 ## Manual
 
-`./gradlew publish`
+`./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository`
 
 ## CI
 
-1. Configure Travis (integration plus repo-level variables)
-2. Pushs tag in the form `Х.Y[.Z[-WHATEVER]]`. (`-SNAPSHOT` suffix generates Maven snapshots
-
-
+upon commit to `master` branch, semantic-release bumps version (if needed) 
+and uses Gradle Nexus Publishing plugin to perform full set of steps 
+required to propagate release to Maven Central repo via OSSRH
