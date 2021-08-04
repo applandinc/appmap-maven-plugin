@@ -4,6 +4,3 @@
 
 Visit [https://appland.com/docs/reference/appmap-maven-plugin](https://appland.com/docs/reference/appmap-maven-plugin)
 for quickstart instructions and full documentation.
-
-## Development
-Development instructions are coming soon.
