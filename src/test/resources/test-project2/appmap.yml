@@ -1,0 +1,3 @@
+name: SampleFiles
+packages:
+- path: com.appland.appmap.sample
