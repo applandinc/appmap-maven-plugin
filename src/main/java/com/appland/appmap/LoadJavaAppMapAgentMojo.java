@@ -4,12 +4,13 @@ package com.appland.appmap;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * Goal that adds appmap.jar to JVM execution as javaagent,
  * right before the test execution begins.
  */
-@Mojo(name = "prepare-agent", defaultPhase = LifecyclePhase.TEST_COMPILE)
+@Mojo(name = "prepare-agent", requiresDependencyResolution = ResolutionScope.TEST, defaultPhase = LifecyclePhase.TEST_COMPILE)
 public class LoadJavaAppMapAgentMojo extends AppMapAgentMojo {
 
     @Override
