@@ -6,7 +6,7 @@
   - [Plugin goals](#plugin-goals)
   - [Plugin configuration](#plugin-configuration)
   - [Notes](#notes)
-    - [Configuring Surefire](#configuring-surefire) 
+    - [Configuring Surefire](#configuring-surefire)
   - [Troubleshooting](#troubleshooting)
   - [Running without modifying `pom.xml`](#running-without-modifying-pomxml)
 
@@ -87,7 +87,9 @@ for details.
   _target/appmap/agent.log_
 - `eventValueSize` Specifies the length of a value string before truncation
   occurs. If set to 0, truncation is disabled. Default: _1024_
-  
+- `targetArgument` Specifies the argument to append the AppMap Java agent flags
+  to. Default: _argLine_
+
 ## Notes
 ### Configuring Surefire
 Some configuration parameters of the Surefire plugin may prevent the appmap plugin
