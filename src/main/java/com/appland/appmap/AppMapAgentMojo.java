@@ -33,6 +33,15 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
     @Parameter(property = "project.debugFile")
     protected File debugFile = new File("target/appmap/agent.log");
 
+    @Parameter(property = "project.recordingAuto")
+    protected Boolean recordingAuto = false;
+
+    @Parameter(property = "project.recordingName")
+    protected String recordingName = null;
+
+    @Parameter(property = "project.recordingFile")
+    protected File recordingFile = null;
+
     @Parameter(property = "project.eventValueSize")
     protected Integer eventValueSize = 1024;
 
@@ -113,6 +122,18 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
         args.add(0, "-Dappmap.output.directory=" + StringEscapeUtils.escapeJava(format("%s", outputDirectory)));
         args.add(0, "-Dappmap.config.file=" + StringEscapeUtils.escapeJava(format("%s", configFile)));
         args.add(0, "-Dappmap.event.valueSize=" + eventValueSize);
+
+        if (recordingAuto) {
+            args.add(0, "-Dappmap.recording.auto=" + format("%b", recordingAuto));
+        }
+
+        if (recordingFile != null) {
+            args.add(0, "-Dappmap.recording.file=" + StringEscapeUtils.escapeJava(format("%s", recordingFile)));
+        }
+
+        if (recordingName != null) {
+            args.add(0, "-Dappmap.recording.name=" + StringEscapeUtils.escapeJava(format("%s", recordingName)));
+        }
     }
 
 

@@ -6,7 +6,7 @@
   - [Plugin goals](#plugin-goals)
   - [Plugin configuration](#plugin-configuration)
   - [Notes](#notes)
-    - [Configuring Surefire](#configuring-surefire) 
+    - [Configuring Surefire](#configuring-surefire)
   - [Troubleshooting](#troubleshooting)
   - [Running without modifying `pom.xml`](#running-without-modifying-pomxml)
 
@@ -87,6 +87,14 @@ for details.
   _target/appmap/agent.log_
 - `eventValueSize` Specifies the length of a value string before truncation
   occurs. If set to 0, truncation is disabled. Default: _1024_
+- `recordingAuto` If true, prompts the agent to begin recording immediately
+  after initialization. The recording will be stopped upon exit. Default:
+  _false_
+- `recordingName` The name of the automatic recording in the AppMaps `metadata`
+  section. Default: _$TIMESTAMP_
+- `recordingFile` The file name of the automatric recording to be output. Note
+  that `outputDirectory` will also be appended to the path. Default:
+  _$TIMESTAMP.appmap.json_
   
 ## Notes
 ### Configuring Surefire
