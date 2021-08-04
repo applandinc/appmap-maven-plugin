@@ -132,7 +132,7 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
         }
 
         if (recordingName != null) {
-            args.add(0, "-Dappmap.recording.name =" + StringEscapeUtils.escapeJava(format("%s", recordingName)));
+            args.add(0, "-Dappmap.recording.name=" + StringEscapeUtils.escapeJava(format("%s", recordingName)));
         }
     }
 
