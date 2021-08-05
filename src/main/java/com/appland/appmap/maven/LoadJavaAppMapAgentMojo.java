@@ -1,21 +1,25 @@
-package com.appland.appmap;
+package com.appland.appmap.maven;
+
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static java.lang.String.format;
 
-public abstract class AppMapAgentMojo extends AbstractMojo {
+/**
+ * Goal that adds appmap.jar to JVM execution as javaagent,
+ * right before the test execution begins.
+ */
+@Mojo(name = "prepare-agent", defaultPhase = LifecyclePhase.TEST_COMPILE)
+public class LoadJavaAppMapAgentMojo extends AppMapAgentMojo {
 
-    static final String APPMAP_AGENT_GROUP_ID = "com.appland";
-    static final String APPMAP_AGENT_ARTIFACT_ID = "appmap-agent";
     static final String SUREFIRE_ARG_LINE = "argLine";
     static final String DEFAULT_CONFIG_FILE = "appmap.yml";
     static final List<String> DEBUG_FLAGS = Arrays.asList("debug", "hooks", "locals", "http");
@@ -38,12 +42,15 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
     @Parameter(property = "project.eventValueSize")
     protected Integer eventValueSize = 1024;
 
-    @Parameter(property = "project")
-    private MavenProject project;
+    @Override
+    public void execute() {
+        if (skip) {
+            getLog().info("Skipping AppLand AppMap execution because property 'skip' is set.");
+            return;
+        }
 
-    public abstract void execute() throws MojoExecutionException;
-
-    protected void skipMojo() {
+        getLog().info("Initializing AppLand AppMap Java Recorder." );
+        loadAppMapJavaAgent();
     }
 
     protected void loadAppMapJavaAgent() {
@@ -125,20 +132,5 @@ public abstract class AppMapAgentMojo extends AbstractMojo {
 
     private String getCurrentArgLinePropertyValue() {
         return project.getProperties().getProperty(SUREFIRE_ARG_LINE);
-    }
-
-    protected String getAppMapAgentJarPath() {
-        Set<Artifact> artifacts = project.getArtifacts();
-        Optional<Artifact> appmapAgentArtifact = artifacts
-            .stream()
-            .filter(a -> {
-                return a.getArtifactId().equals(APPMAP_AGENT_ARTIFACT_ID) &&
-                    a.getGroupId().equals(APPMAP_AGENT_GROUP_ID);
-            }).findFirst();
-        if (appmapAgentArtifact.isPresent()) {
-            return appmapAgentArtifact.get().getFile().getPath();
-        } else {
-            throw new RuntimeException("Artifact groupId=com.appland artifactId=appmap-agent is not present in the project; please add it to the pom.xml");
-        }
     }
 }

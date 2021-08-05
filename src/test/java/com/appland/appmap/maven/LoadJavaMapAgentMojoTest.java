@@ -1,4 +1,4 @@
-package com.appland.appmap;
+package com.appland.appmap.maven;
 
 import static org.junit.Assert.assertEquals;
 
