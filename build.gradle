@@ -1,9 +1,7 @@
-
 buildscript {
     ext {
         mavenVersion = "$mavenVersionCore"
     }
-
 }
 
 plugins {
@@ -16,37 +14,37 @@ plugins {
 
 // parameterization
 
-def defGroupId       = 'com.appland'
-def defArtifactId    = 'appmap-maven-plugin'
-def defName          = 'AppMap Maven Plugin'
-def defVersion       = "1.1.2"
-def defDescription   = 'Maven plugin to record AppMaps with the appmap.jar agent'
-def defGitSlug       =  "applandinc/appmap-java-maven-plugin"
-def defMavenRepo     = 'https://s01.oss.sonatype.org'
+def defGroupId = 'com.appland'
+def defArtifactId = 'appmap-maven-plugin'
+def defName = 'AppMap Maven Plugin'
+def defVersion = "1.1.2"
+def defDescription = 'Maven plugin to record AppMaps with the appmap.jar agent'
+def defGitSlug = "applandinc/appmap-java-maven-plugin"
+def defMavenRepo = 'https://s01.oss.sonatype.org'
 
-def paramSignKey        = findProperty('signingKey')
-def paramSignPassword   = findProperty("signingPassword")
-def paramRepoUsername   = findProperty('ossrhUsername')
-def paramRepoPassword   = findProperty('ossrhPassword')
-def paramDescription    = findProperty('artifactDescription')   ?: defDescription
-def paramName           = findProperty('artifactName')          ?: defName
-def paramGroupId        = findProperty('publicationGroupId')    ?: defGroupId
-def paramArtifactId     = findProperty('publicationArtifactId') ?: defArtifactId
-def paramGitSlug        = System.getenv("TRAVIS_REPO_SLUG")     ?: defGitSlug
-def paramMavenRepo      = findProperty('mavenRepo')             ?: defMavenRepo
+def paramSignKey = findProperty('signingKey')
+def paramSignPassword = findProperty("signingPassword")
+def paramRepoUsername = findProperty('ossrhUsername')
+def paramRepoPassword = findProperty('ossrhPassword')
+def paramDescription = findProperty('artifactDescription') ?: defDescription
+def paramName = findProperty('artifactName') ?: defName
+def paramGroupId = findProperty('publicationGroupId') ?: defGroupId
+def paramArtifactId = findProperty('publicationArtifactId') ?: defArtifactId
+def paramGitSlug = System.getenv("TRAVIS_REPO_SLUG") ?: defGitSlug
+def paramMavenRepo = findProperty('mavenRepo') ?: defMavenRepo
 
-def paramVersion        = findProperty('paramVersion')
-def travisVersion       = System.getenv("TRAVIS_BRANCH")
-def versionLikeRegexp   = /^\d+\.\d+.*/
-def travisVersionOK     = travisVersion && (travisVersion ==~ versionLikeRegexp)
-paramVersion = paramVersion ?: ( travisVersionOK ? travisVersion : defVersion )
+def paramVersion = findProperty('paramVersion')
+def travisVersion = System.getenv("TRAVIS_BRANCH")
+def versionLikeRegexp = /^\d+\.\d+.*/
+def travisVersionOK = travisVersion && (travisVersion ==~ versionLikeRegexp)
+paramVersion = paramVersion ?: (travisVersionOK ? travisVersion : defVersion)
 
 // required by NexusPublishing
 version = paramVersion
-group   = paramGroupId
+group = paramGroupId
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
 
 configurations {
@@ -54,10 +52,12 @@ configurations {
 }
 
 dependencies {
-    implementation 'org.apache.maven:maven-plugin-api:3.6.1'
     compileOnly 'org.apache.maven.plugin-tools:maven-plugin-annotations:3.6.0'
+
+    implementation 'org.apache.commons:commons-text:1.9'
+    implementation 'org.apache.maven:maven-plugin-api:3.6.1'
     implementation 'org.apache.maven:maven-core:3.5.4'
-    implementation 'org.apache.commons:commons-lang3:3.10'
+    implementation 'com.appland:appmap-agent:[1.3, 2.0)'
 
     testImplementation 'junit:junit:4.13.1'
 
@@ -67,27 +67,19 @@ dependencies {
     mavenEmbedder 'org.apache.maven.resolver:maven-resolver-connector-basic:1.4.1'
     mavenEmbedder 'org.apache.maven.resolver:maven-resolver-transport-http:1.4.1'
     mavenEmbedder 'org.slf4j:slf4j-simple:1.7.30'
-//    mavenEmbedder 'org.apache.maven.wagon:wagon-http:3.4.1'
-//    mavenEmbedder 'org.apache.maven.wagon:wagon-provider-api:3.4.1'
-
-    implementation 'com.appland:appmap-agent:1.0.4'
 }
-
-//group         = paramGroupId
-//description   = paramDescription
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 compileJava.options.encoding = 'UTF-8'
 
-
 install.repositories.mavenInstaller.pom.with {
-    groupId     = paramGroupId
-    artifactId  = paramArtifactId
-    version     = paramVersion
-    packaging   = 'maven-plugin'
-    name        = paramName
+    groupId = paramGroupId
+    artifactId = paramArtifactId
+    version = paramVersion
+    packaging = 'maven-plugin'
+    name = paramName
     description = paramDescription
 }
 
@@ -106,11 +98,11 @@ task generatePluginDescriptor(type: JavaExec, dependsOn: compileJava) {
     main = 'org.apache.maven.cli.MavenCli'
     systemProperties['maven.multiModuleProjectDirectory'] = projectDir
     args = [
-            '--errors',
-            '--batch-mode',
-            '--file', "${buildDir}/pom.xml",
-            'org.apache.maven.plugins:maven-plugin-plugin:3.6.0:descriptor',
-            '-Dproject.build.sourceEncoding=' + compileJava.options.encoding
+        '--errors',
+        '--batch-mode',
+        '--file', "${buildDir}/pom.xml",
+        'org.apache.maven.plugins:maven-plugin-plugin:3.6.0:descriptor',
+        '-Dproject.build.sourceEncoding=' + compileJava.options.encoding
     ]
 
     doFirst {
@@ -125,21 +117,20 @@ task generatePluginDescriptor(type: JavaExec, dependsOn: compileJava) {
         // because MavenModel already defines build and so it will
         // result in No such property: _SCRIPT_CLASS_NAME_ for class: org.apache.maven.model.Model
         install.repositories
-               .mavenInstaller
-               .pom
-               .withXml {
-                    asNode().appendNode('build')
-                            .with {
-                                appendNode('directory', directory)
-                                appendNode('outputDirectory', outputDirectory)
-                            }
-               }
-               .writeTo(pomFile)
+            .mavenInstaller
+            .pom
+            .withXml {
+                asNode().appendNode('build')
+                    .with {
+                        appendNode('directory', directory)
+                        appendNode('outputDirectory', outputDirectory)
+                    }
+            }
+            .writeTo(pomFile)
 
         assert pomFile.file, "${pomFile.canonicalPath}: was not generated"
         logger.info("POM is generated in ${pomFile.canonicalPath}")
     }
-
 
     doLast {
         assert pluginDescriptorFile.file, "${pluginDescriptorFile.canonicalPath}: was not generated"
@@ -149,7 +140,6 @@ task generatePluginDescriptor(type: JavaExec, dependsOn: compileJava) {
 
 project.jar.dependsOn(generatePluginDescriptor)
 
-
 // demand generation of extra artifacts
 apply plugin: 'java'
 java {
@@ -157,20 +147,24 @@ java {
     withJavadocJar()
 }
 
+/* TODO: Test is not passing
+test {
+  useJUnitPlatform()
+}
+*/
 
 // declare publications and repositories
 apply plugin: 'maven-publish'
 publishing {
-  publications {
+    publications {
         appMapPlugin(MavenPublication) {
 
             // requirements: https://central.sonatype.org/pages/requirements.html
 
             // 1. coordinates
-            groupId     paramGroupId
-            artifactId  paramArtifactId
-            version     paramVersion
-
+            groupId paramGroupId
+            artifactId paramArtifactId
+            version paramVersion
 
             // 2. artifacts
             from components.java
@@ -182,23 +176,23 @@ publishing {
             // TBD: parameterize more values?
 
             pom {
-                name        = paramName     // "$paramGroupId:$paramArtifactId"
+                name = paramName     // "$paramGroupId:$paramArtifactId"
                 description = paramDescription
-                url         = "https://appland.com"
+                url = "https://appland.com"
                 licenses {
-                  license {
-                    name = "MIT"
-                    url = "https://raw.githubusercontent.com/$paramGitSlug/master/LICENSE.txt"
-                  }
+                    license {
+                        name = "MIT"
+                        url = "https://raw.githubusercontent.com/$paramGitSlug/master/LICENSE.txt"
+                    }
                 }
                 developers {
-                  developer {
-                    // id = "kgilpin"
-                    name = "Kevin Gilpin"
-                    email = "kevin@appland.com"
-                    organization = "AppLand Inc."
-                    url="https://dev.to/kgilpin"
-                  }
+                    developer {
+                        // id = "kgilpin"
+                        name = "Kevin Gilpin"
+                        email = "kevin@appland.com"
+                        organization = "AppLand Inc."
+                        url = "https://dev.to/kgilpin"
+                    }
                 }
                 scm {
                     connection = "scm:git:git://github.com/${paramGitSlug}.git"
@@ -207,22 +201,19 @@ publishing {
                 }
             }
         }
-  }
-
+    }
 }
 
 nexusPublishing {
     repositories {
-        sonatype { 
-            nexusUrl                = uri(  paramMavenRepo + "/service/local/")
-            snapshotRepositoryUrl   = uri(  paramMavenRepo + "/content/repositories/snapshots" )        
-            username                = paramRepoUsername
-            password                = paramRepoPassword
+        sonatype {
+            nexusUrl = uri(paramMavenRepo + "/service/local/")
+            snapshotRepositoryUrl = uri(paramMavenRepo + "/content/repositories/snapshots")
+            username = paramRepoUsername
+            password = paramRepoPassword
         }
     }
-
 }
-
 
 // conditionally inject sign tasks into the flow
 if (paramSignKey) {
