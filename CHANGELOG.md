@@ -1,3 +1,18 @@
+# [1.2.0](https://github.com/applandinc/appmap-maven-plugin/compare/v1.1.2...v1.2.0) (2021-08-10)
+
+
+### Bug Fixes
+
+* Reformat build.gradle with 4 spaces ([7826a27](https://github.com/applandinc/appmap-maven-plugin/commit/7826a276db680ef08cd10b858bcbf8fe51711707))
+* Remove implementation dependency on appmap.jar ([0876a3d](https://github.com/applandinc/appmap-maven-plugin/commit/0876a3d96949762fbd5d20b604d8153edac22e45))
+* Update AppMap agent code for 1.3.0 API ([85902e7](https://github.com/applandinc/appmap-maven-plugin/commit/85902e703d713290cd5e609ac1e174f085da6c70))
+
+
+### Features
+
+* Add command to print java.home and agent jar path ([f60e7f5](https://github.com/applandinc/appmap-maven-plugin/commit/f60e7f53281b87d5ae1ce7cf6afc260163704cb7))
+* Add dependency on appmap-agent [1.3, 2.0) ([8ae3134](https://github.com/applandinc/appmap-maven-plugin/commit/8ae31344c6322d607114fa9d51afeae87f02d0ab))
+
 ## [1.1.2](https://github.com/applandinc/appmap-maven-plugin/compare/v1.1.1...v1.1.2) (2021-04-08)
 
 

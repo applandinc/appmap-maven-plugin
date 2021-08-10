@@ -17,7 +17,7 @@ plugins {
 def defGroupId = 'com.appland'
 def defArtifactId = 'appmap-maven-plugin'
 def defName = 'AppMap Maven Plugin'
-def defVersion = "1.1.2"
+def defVersion = "1.2.0"
 def defDescription = 'Maven plugin to record AppMaps with the appmap.jar agent'
 def defGitSlug = "applandinc/appmap-java-maven-plugin"
 def defMavenRepo = 'https://s01.oss.sonatype.org'
