@@ -6,7 +6,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
-import java.io.File;
 import java.util.*;
 
 public abstract class AppMapAgentMojo extends AbstractMojo {
