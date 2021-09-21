@@ -83,6 +83,10 @@ public class LoadJavaAppMapAgentMojo extends AppMapAgentMojo {
         return builder.toString();
     }
 
+    private String javaAgentArgLine() {
+        return format("\"-javaagent:%s\"", StringEscapeUtils.escapeJava(getAppMapAgentJarPath()));
+    }
+
     /**
      * Generate required quotes JVM argument based on current configuration and
      * prepends it to the given argument command line. If a agent with the same
@@ -90,14 +94,12 @@ public class LoadJavaAppMapAgentMojo extends AppMapAgentMojo {
      * command line.
      */
     private void removeOldAppMapAgentFromCommandLine(List<String> oldArgs) {
-        final String plainAgent = format("-javaagent:%s", getAppMapAgentJarPath());
+        final String plainAgent = this.javaAgentArgLine();
         oldArgs.removeIf(oldCommand -> oldCommand.startsWith(plainAgent));
     }
 
     private void addMvnAppMapCommandLineArgsFirst(List<String> args) {
-        args.add(StringEscapeUtils.escapeJava(
-            format("-javaagent:%s", getAppMapAgentJarPath())
-        ));
+        args.add(this.javaAgentArgLine());
 
         if (this.debug != null && !this.debug.isEmpty()) {
             final List<String> debugTokens = new ArrayList<>(Arrays.asList(this.debug.split("[,|\\s]")));
